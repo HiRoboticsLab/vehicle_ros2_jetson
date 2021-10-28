@@ -9,6 +9,9 @@ RUN apt-get install python3-gi
 RUN pip install tornado
 RUN pip install pymongo
 
+# RUN pip install tornado -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+# RUN pip install pymongo -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+
 # 设置时区
 RUN cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
