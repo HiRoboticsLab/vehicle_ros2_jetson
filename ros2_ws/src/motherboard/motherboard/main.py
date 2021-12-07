@@ -11,6 +11,10 @@ from .wheel import Wheel
 from .imu import Imu
 from .pid import PID
 
+# grpc
+import grpc
+from . import wxmp_pb2, wxmp_pb2_grpc
+
 # 临时变量
 light = None
 esp = None
@@ -47,14 +51,20 @@ def read_serial():
                 ok, obj = is_json(json_str)
 
                 if ok:
-                    array_wheel = obj['wheel']
-                    wheel.report(array_wheel)
+                    if 'ble' in obj:
+                        cmd = obj['ble']
+                        with grpc.insecure_channel('localhost:50051') as channel:
+                            stub = wxmp_pb2_grpc.WXMPStub(channel)
+                            stub.ctrl(wxmp_pb2.RequestParams())
+                    else:
+                        array_wheel = obj['wheel']
+                        wheel.report(array_wheel)
 
-                    array_ypr = obj['ypr']
-                    array_quaternion = obj['quaternion']
-                    array_accel = obj['accel']
-                    imu.report_ypr(array_ypr)
-                    imu.report_imu(array_ypr, array_quaternion, array_accel)
+                        array_ypr = obj['ypr']
+                        array_quaternion = obj['quaternion']
+                        array_accel = obj['accel']
+                        imu.report_ypr(array_ypr)
+                        imu.report_imu(array_ypr, array_quaternion, array_accel)
 
         except Exception as e:
             traceback.print_exc()

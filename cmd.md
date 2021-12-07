@@ -53,3 +53,40 @@ sudo docker pull nginx
 sudo docker run -it -d --restart always --network host -v /home/jetbot/Desktop/vehicle/web_page/dist:/usr/share/nginx/html --name webtool nginx
 ```
 
+```shell
+# 微信小程序
+# 安装组件
+sudo apt-get install python3-pip
+
+# https://grpc.io/docs/languages/python/quickstart/
+pip3 install grpcio
+pip3 install grpcio-tools
+pip3 install roslibpy
+
+# 如果安装失败，就升级
+python3 -m pip install --upgrade pip
+
+
+# 文件转换
+cd /home/jetbot/Desktop/vehicle/wxmp/proto
+
+python3 -m grpc_tools.protoc --python_out=. --grpc_python_out=. -I. ./wxmp.proto
+
+python3 -m grpc_tools.protoc --python_out=./proto --grpc_python_out=./proto -I./proto wxmp.proto
+
+放到“ros2_ws/src/motherboard/motherboard”下
+
+
+# 安装服务
+sudo cp /home/jetbot/Desktop/vehicle/wxmp/wxmp.service /etc/systemd/system/wxmp.service
+sudo chmod +x /etc/systemd/system/wxmp.service
+systemctl enable wxmp
+
+sudo cp /home/jetbot/Desktop/vehicle/wxmp/grpc.service /etc/systemd/system/grpc.service
+sudo chmod +x /etc/systemd/system/grpc.service
+systemctl enable grpc
+
+systemctl start wxmp
+systemctl stop wxmp
+systemctl status wxmp
+```

@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service WXMP{
+    rpc ctrl (RequestParams) returns (ResponseParams);
+}
+
+message RequestParams {
+
+}
+
+message ResponseParams {
+
+}

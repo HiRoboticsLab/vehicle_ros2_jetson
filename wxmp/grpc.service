@@ -1,0 +1,14 @@
+[Unit]
+Description=grpc service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=jetbot
+ExecStart=/usr/bin/python3 /home/jetbot/Desktop/vehicle/wxmp/grpc_server.py
+
+[Install]
+WantedBy=multi-user.target
